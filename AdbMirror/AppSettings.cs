@@ -13,6 +13,7 @@ public sealed class AppSettings
     public ScrcpyPreset DefaultPreset { get; set; } = ScrcpyPreset.Balanced;
     public bool AutoMirrorOnConnect { get; set; } = false;
     public bool StartFullscreen { get; set; } = false;
+    public bool KeepScreenAwake { get; set; } = true;
 
     private static string GetSettingsPath()
     {

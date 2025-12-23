@@ -1,10 +1,13 @@
 # Build outputs
 bin/
 obj/
+**/bin/
+**/obj/
 
 # Publish outputs
-AdbMirror/bin/Release/
-AdbMirror/bin/Debug/
+**/bin/Release/
+**/bin/Debug/
+**/publish/
 
 # Embedded resource zips
 AdbMirror/Resources/platform-tools.zip
@@ -29,6 +32,11 @@ Desktop.ini
 # Local helper/patch files
 clean*.patch
 nul
+*.patch
+
+# Resources folder (contains zipped dependencies for embedding)
+AdbMirror/Resources/
+Resources/
 
 
 

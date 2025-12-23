@@ -203,7 +203,7 @@ public sealed class ScrcpyService
     /// <summary>
     /// Starts scrcpy with the given preset and device serial. Returns false if it fails immediately.
     /// </summary>
-    public bool StartMirroring(string serial, ScrcpyPreset preset, Action<string>? exitedCallback, out string? error)
+    public bool StartMirroring(string serial, ScrcpyPreset preset, bool keepScreenAwake, Action<string>? exitedCallback, out string? error)
     {
         StopMirroring();
 
@@ -212,7 +212,7 @@ public sealed class ScrcpyService
             return false;
         }
 
-        var args = BuildArguments(serial, preset);
+        var args = BuildArguments(serial, preset, keepScreenAwake);
         var psi = new ProcessStartInfo
         {
             FileName = _scrcpyPath,
@@ -308,7 +308,7 @@ public sealed class ScrcpyService
         }
     }
 
-    private static string BuildArguments(string serial, ScrcpyPreset preset)
+    private static string BuildArguments(string serial, ScrcpyPreset preset, bool keepScreenAwake)
     {
         var builder = new StringBuilder();
         builder.Append("-s ").Append('"').Append(serial).Append('"');
@@ -337,7 +337,11 @@ public sealed class ScrcpyService
         //
         // If a “view-only” mode is needed later, it should be exposed as an explicit option that
         // omits `--turn-screen-off` when `--no-control` is requested.
-        builder.Append(" --stay-awake --turn-screen-off");
+        if (keepScreenAwake)
+        {
+            builder.Append(" --stay-awake");
+        }
+        builder.Append(" --turn-screen-off");
         return builder.ToString();
     }
 }

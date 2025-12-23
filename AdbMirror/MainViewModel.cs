@@ -40,8 +40,40 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         new(new[] { ScrcpyPreset.Low, ScrcpyPreset.Balanced, ScrcpyPreset.High });
 
     public ICommand PrimaryCommand { get; }
-    public ICommand OpenSettingsCommand { get; }
     public ICommand CopyLogsCommand { get; }
+    
+    public bool AutoMirrorOnConnect
+    {
+        get => _settings.AutoMirrorOnConnect;
+        set
+        {
+            _settings.AutoMirrorOnConnect = value;
+            _settings.Save();
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool StartFullscreen
+    {
+        get => _settings.StartFullscreen;
+        set
+        {
+            _settings.StartFullscreen = value;
+            _settings.Save();
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool KeepScreenAwake
+    {
+        get => _settings.KeepScreenAwake;
+        set
+        {
+            _settings.KeepScreenAwake = value;
+            _settings.Save();
+            OnPropertyChanged();
+        }
+    }
 
     public string StatusText
     {
@@ -64,7 +96,11 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     public ScrcpyPreset SelectedPreset
     {
         get => _selectedPreset;
-        set => SetField(ref _selectedPreset, value);
+        set
+        {
+            SetField(ref _selectedPreset, value);
+            SaveSettings();
+        }
     }
 
     public string Logs
@@ -84,7 +120,6 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
     public MainViewModel()
     {
         PrimaryCommand = new RelayCommand(_ => OnPrimaryClicked(), _ => IsPrimaryEnabled);
-        OpenSettingsCommand = new RelayCommand(_ => ShowSettings());
         CopyLogsCommand = new RelayCommand(_ =>
         {
             try
@@ -236,7 +271,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         }
 
         Log($"Starting scrcpy for device {_currentDevice.Serial} with preset {SelectedPreset}");
-        if (!_scrcpyService.StartMirroring(_currentDevice.Serial, SelectedPreset, OnScrcpyExited, out var error))
+        if (!_scrcpyService.StartMirroring(_currentDevice.Serial, SelectedPreset, _settings.KeepScreenAwake, OnScrcpyExited, out var error))
         {
             Log($"Failed to start scrcpy: {error ?? "Unknown error"}");
             StatusText = string.IsNullOrWhiteSpace(error)
@@ -266,17 +301,14 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
 
     private void ShowSettings()
     {
-        var window = new SettingsWindow(_settings)
-        {
-            Owner = Application.Current.MainWindow
-        };
-
-        var result = window.ShowDialog();
-        if (result == true)
-        {
-            // Re-read effective settings
-            SelectedPreset = _settings.DefaultPreset;
-        }
+        // Settings are now inline in the main window
+        // This method kept for compatibility but does nothing
+    }
+    
+    public void SaveSettings()
+    {
+        _settings.DefaultPreset = SelectedPreset;
+        _settings.Save();
     }
 
     private void Log(string message)
@@ -306,6 +338,11 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         }
 
         field = value;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 

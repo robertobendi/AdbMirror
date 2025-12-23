@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -14,6 +14,12 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishReadyToRun>true</PublishReadyToRun>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <!-- English only - exclude satellite assemblies -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- Trim unused code -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <!-- Exclude all files except the exe -->
+    <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
   </PropertyGroup>
   
   <!-- Also apply to publish commands regardless of configuration -->
@@ -23,7 +29,14 @@
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
     <PublishReadyToRun Condition="'$(PublishReadyToRun)' == ''">true</PublishReadyToRun>
     <IncludeNativeLibrariesForSelfExtract Condition="'$(IncludeNativeLibrariesForSelfExtract)' == ''">true</IncludeNativeLibrariesForSelfExtract>
+    <SatelliteResourceLanguages Condition="'$(SatelliteResourceLanguages)' == ''">en</SatelliteResourceLanguages>
   </PropertyGroup>
+  
+  <!-- Exclude satellite assemblies (non-English language resources) -->
+  <ItemGroup>
+    <SatelliteResourceLanguages Remove="@(SatelliteResourceLanguages)" />
+    <SatelliteResourceLanguages Include="en" />
+  </ItemGroup>
   <ItemGroup>
     <!-- Link Labyrica logo from solution root into the project as a WPF resource -->
     <Resource Include="..\logo.png">
