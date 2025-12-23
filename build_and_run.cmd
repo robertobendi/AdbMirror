@@ -19,6 +19,10 @@ if errorlevel 1 (
 echo Running AdbMirror...
 dotnet run
 
+echo.
+echo Opening folder containing AdbMirror.exe...
+start explorer.exe "bin\Debug\net8.0-windows"
+
 endlocal
 
 

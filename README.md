@@ -92,6 +92,29 @@ Or use the provided scripts:
 - `build_and_run.cmd` (Windows CMD)
 - `build_and_run.ps1` (PowerShell)
 
+## Distribution / Publishing
+
+To create a **single-file executable with ALL dependencies embedded**:
+
+**PowerShell:**
+```powershell
+.\publish_single_file.ps1
+```
+
+**CMD:**
+```cmd
+publish_single_file.cmd
+```
+
+This creates a self-contained `AdbMirror.exe` in `AdbMirror\bin\Release\net8.0-windows\win-x64\publish\`.
+
+**Important**: The executable is a **true single-file** - all dependencies (platform-tools and scrcpy) are embedded inside the exe and extracted automatically at runtime to a temporary directory. You only need to distribute the single `AdbMirror.exe` file!
+
+The publish script automatically:
+1. Zips the `platform-tools` and `scrcpy` folders
+2. Embeds them as resources in the executable
+3. Creates a single-file exe that extracts them on first run
+
 ## Architecture
 
 - **AdbService**: Handles ADB operations, device discovery, and state polling

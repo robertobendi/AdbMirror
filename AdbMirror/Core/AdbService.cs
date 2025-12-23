@@ -45,7 +45,14 @@ public sealed class AdbService
 
         var candidates = new List<string>();
 
-        // 2) Bundled locations relative to the app
+        // 2) Check embedded resources first (extracted to temp)
+        var extractedAdb = ResourceExtractor.GetAdbPath();
+        if (!string.IsNullOrEmpty(extractedAdb) && File.Exists(extractedAdb))
+        {
+            candidates.Add(extractedAdb);
+        }
+
+        // 3) Bundled locations relative to the app
         var baseDir = AppContext.BaseDirectory;
         candidates.Add(Path.Combine(baseDir, "platform-tools", "adb.exe"));
         candidates.Add(Path.Combine(baseDir, "adb.exe"));
@@ -58,7 +65,7 @@ public sealed class AdbService
             currentDir = currentDir.Parent;
         }
 
-        // 3) Common Android SDK locations
+        // 4) Common Android SDK locations
         var androidHome = Environment.GetEnvironmentVariable("ANDROID_HOME")
                           ?? Environment.GetEnvironmentVariable("ANDROID_SDK_ROOT");
         if (!string.IsNullOrWhiteSpace(androidHome))
@@ -72,7 +79,7 @@ public sealed class AdbService
             candidates.Add(Path.Combine(localAppData, "Android", "Sdk", "platform-tools", "adb.exe"));
         }
 
-        // 4a) Scan PATH directories for adb.exe
+        // 5a) Scan PATH directories for adb.exe
         var pathEnv = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
         var pathParts = pathEnv.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
         foreach (var rawDir in pathParts)
@@ -87,7 +94,7 @@ public sealed class AdbService
             candidates.Add(candidate);
         }
 
-        // 4b) Use `where adb` if available for more accurate resolution
+        // 5b) Use `where adb` if available for more accurate resolution
         try
         {
             var whereInfo = new ProcessStartInfo

@@ -52,5 +52,20 @@ cd /d C:\Users\rober\Documents\GitHub\AdbMirror\AdbMirror && dotnet build && dot
 
 The assistant will execute those steps in order: change to the project folder, build the project, and run the app.
 
+### Publishing (Distribution Builds)
+
+**Note**: By default, all `dotnet publish` commands will create a **single-file, self-contained executable** with embedded resources (platform-tools and scrcpy). This is configured in `AdbMirror.csproj` and happens automatically.
+
+To publish:
+```cmd
+dotnet publish -c Release
+```
+
+Or use the convenience scripts:
+- `publish_single_file.cmd` (Windows CMD)
+- `publish_single_file.ps1` (PowerShell)
+
+The output will be a single `AdbMirror.exe` file with all dependencies embedded.
+
 
 

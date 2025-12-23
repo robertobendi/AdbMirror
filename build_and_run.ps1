@@ -22,4 +22,11 @@ if (-not $NoRun) {
     dotnet run
 }
 
+Write-Host ""
+Write-Host "Opening folder containing AdbMirror.exe..." -ForegroundColor Cyan
+$exeFolder = Join-Path (Get-Location) "bin\Debug\net8.0-windows"
+if (Test-Path $exeFolder) {
+    Start-Process explorer.exe -ArgumentList $exeFolder
+}
+
 

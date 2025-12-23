@@ -53,6 +53,14 @@ public sealed class ScrcpyService
         }
 
         var candidates = new List<string>();
+        
+        // Check embedded resources first (extracted to temp)
+        var extractedScrcpy = ResourceExtractor.GetScrcpyPath();
+        if (!string.IsNullOrEmpty(extractedScrcpy) && File.Exists(extractedScrcpy))
+        {
+            candidates.Add(extractedScrcpy);
+        }
+
         var baseDir = AppContext.BaseDirectory;
         
         // Check bundled locations

@@ -1,0 +1,34 @@
+# Build outputs
+bin/
+obj/
+
+# Publish outputs
+AdbMirror/bin/Release/
+AdbMirror/bin/Debug/
+
+# Embedded resource zips
+AdbMirror/Resources/platform-tools.zip
+AdbMirror/Resources/scrcpy.zip
+
+# VS / Rider / IDE
+.vs/
+*.user
+*.suo
+*.userprefs
+
+# Logs and temp
+*.log
+*.tmp
+*.temp
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Local helper/patch files
+clean*.patch
+nul
+
+
+
