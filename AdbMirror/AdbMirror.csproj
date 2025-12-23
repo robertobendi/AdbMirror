@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>AdbMirror</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Link Labyrica logo from solution root into the project as a WPF resource -->
+    <Resource Include="..\logo.png">
+      <Link>Assets\logo.png</Link>
+    </Resource>
+  </ItemGroup>
+</Project>
+
+
